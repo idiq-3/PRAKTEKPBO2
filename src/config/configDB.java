@@ -9,81 +9,191 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumn;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author acer
  */
 public class configDB {
-    private String jdbcURL="jdbc:mysql://localhost:3306/2210010133_pbo2";
-    private String username="root";
-    private String password="";
     
-    private DefaultTableModel Modelnya;
-    private TableColumn kolomnya;
+    String jdbcURL ="jdbc:mysql://localhost:3306/2210010133_pbo2";
+    String username ="root";
+    String password ="";
     
-    public configDB(){}
+    Connection koneksi;
     
-    public Connection getKoneksiDB() throws SQLException {
-        try {
+    public configDB(){
+        try (Connection Koneksi = DriverManager.getConnection(jdbcURL, username, password)){
             Driver mysqldriver = new com.mysql.jdbc.Driver();
             DriverManager.registerDriver(mysqldriver);
-            System.out.println("Koneksi DB berhasil");
-        } catch (Exception e){
-            System.out.println("Gagal konek ke DB: " + e.getMessage());
-            e.printStackTrace();
+            System.out.println("Berhasil");
+        } catch (SQLException error) {
+            System.err.println(error.toString());
         }
-        
-        return DriverManager.getConnection(jdbcURL, username, password);
-    }
-    public boolean DuplicateKey (String NamaTabel, String PrimaryKey, String isiData){
-        boolean hasil=false; //definisi awal
-        try{
-            String SQL = "SELECT * FROM " + NamaTabel + " WHERE " + PrimaryKey + " ='" + isiData + "'";
-            Statement perintah = getKoneksiDB().createStatement();
-            ResultSet hasilData = perintah.executeQuery(SQL);
-        
-            hasil=hasilData.next();//true
-        } catch (Exception e){
-          System.out.println("Error DuplicateKey: " + e.getMessage());
-       }
-       return hasil;
-    }
-    public String gettabelfield (String[] field)
-    {
-        String hasilnya="";
-        int deteksiIndexAkhir=field.length-1;
-        try{
-            for (int i = 0; i < field.length; i++){
-                if (i==deteksiIndexAkhir){
-                    hasilnya=hasilnya+field[i];                    
-                }else{
-                    hasilnya=hasilnya+field[i]+',';
-                }
-            }
-        }catch (Exception e){
-            System.out.println(e.toString());
-        }
-        return "("+hasilnya+")";
-    }
-    public String getisitabel (String[] isi)
-    {
-        String result="";
-        int deteksiIndex=isi.length-1;
-        try{
-            for (int i = 0; i < isi.length; i++){
-                if (i==deteksiIndex){
-                    result=result+isi[i]+",";                    
-                }else{
-                    result=result+isi[i]+',';
-                }
-            }
-        }catch (Exception e){
-            System.out.println(e.toString());
-        }
-        return "("+result+")";
     }
     
+    public configDB(String url, String user, String pass){
+        
+        try(Connection Koneksi = DriverManager.getConnection(url, user, pass)) {
+            Driver mysqldriver = new com.mysql.jdbc.Driver();
+            DriverManager.registerDriver(mysqldriver);
+            
+            System.out.println("Berhasil");
+        } catch (Exception error) {
+            System.err.println(error.toString());
+        }
+        
+    }
+    
+    
+    public static Connection getKoneksi() {
+        try {
+            String url = "jdbc:mysql://localhost:3306/2210010133_pbo2";  // Ganti dengan URL dan database Anda
+            String username = "root";  // Ganti dengan username database Anda
+            String password = "";  // Ganti dengan password database Anda
+            return DriverManager.getConnection(url, username, password);
+        } catch (SQLException e) {
+            System.out.println("Koneksi Gagal: " + e.getMessage());
+            return null;
+        }
+    }
+
+    
+    public static boolean duplicateKey(String table, String PrimaryKey, String value){
+        boolean hasil=false;
+        
+        try {
+            Statement sts = getKoneksi().createStatement();
+            ResultSet rs = sts.executeQuery("SELECT*FROM "+table+" WHERE "+PrimaryKey+" ='"+value+"'");
+            hasil = rs.next();
+            
+            rs.close();
+            sts.close();
+            getKoneksi().close();
+            
+        } catch (Exception e) {
+            System.err.println(e.toString());
+        }
+        
+        
+        return hasil;
+    }
+    public void SimpanKecamatan(String id_kecamatan, String kecamatan){
+        
+        try {
+            if (duplicateKey("kecamatan","id_kecamatan",id_kecamatan)){
+                JOptionPane.showMessageDialog(null, "ID sudah terdaftar");
+            } else{
+                String SQL = "INSERT INTO kecamatan (id_kecamatan, kecamatan) Value('"+id_kecamatan+"','"+kecamatan+"')";
+                Statement perintah = getKoneksi().createStatement();
+                
+                perintah.executeUpdate(SQL);
+                perintah.close();
+                getKoneksi().close();
+                JOptionPane.showMessageDialog(null, "Data Berhasil Disimpan");
+                
+            }
+        } catch (Exception e) {
+            System.err.println(e.toString());
+        }
+    }
+    public void Simpanmasjid(String id_masjid, String nama_masjid, String alamat_masjid, String id_kecamatan, String foto){
+        
+        try {
+            if (duplicateKey("data_masjid","id_masjid",id_masjid)){
+                JOptionPane.showMessageDialog(null, "ID sudah terdaftar");
+            } else{
+                String SQL = "INSERT INTO data_masjid (id_masjid, nama_masjid, alamat_masjid, id_kecamatan, foto) Value('"+id_masjid+"','"+nama_masjid+"','"+alamat_masjid+"','"+id_kecamatan+"','"+foto+"')";
+                Statement perintah = getKoneksi().createStatement();
+                
+                perintah.executeUpdate(SQL);
+                perintah.close();
+                getKoneksi().close();
+                JOptionPane.showMessageDialog(null, "Data Berhasil Disimpan");
+                
+            }
+        } catch (Exception e) {
+            System.err.println(e.toString());
+        }
+    }
+    
+    public String getTabelField(String[] Field) {
+    // Menggabungkan field dengan koma
+    return "(" + String.join(", ", Field) + ")";
+    }
+
+    public String getTabelValue(String[] Value) {
+        // Menggabungkan value dengan koma dan menambahkan tanda kutip untuk nilai string
+        return "(" + String.join(", ", Value) + ")";
+    }
+
+    
+// Method untuk membangun nilai field yang akan di-update
+     public static String getFieldValueEdit(String[] Field, String[] value){
+        String hasil = "";
+        int deteksi = Field.length-1;
+        try {
+            for (int i = 0; i < Field.length; i++) {
+                if (i==deteksi){
+                    hasil = hasil +Field[i]+" ='"+value[i]+"'";
+                }else{
+                   hasil = hasil +Field[i]+" ='"+value[i]+"',";  
+                }
+            }
+        } catch (Exception e) {
+            System.out.println(e.toString());
+        }
+        
+        return hasil;
+    }   
+    // Method untuk update data secara dinamis
+    public static void UbahDinamis(String NamaTabel, String PrimaryKey, String IsiPrimary, String[] Field, String[] Value) {
+        try {
+            // Mencari apakah ID yang diberikan ada di dalam tabel
+            String SQLCheck = "SELECT COUNT(*) FROM " + NamaTabel + " WHERE " + PrimaryKey + " = '" + IsiPrimary + "'";
+            Statement perintah = getKoneksi().createStatement();
+            ResultSet rs = perintah.executeQuery(SQLCheck);
+
+            if (rs.next() && rs.getInt(1) > 0) { // Jika ID ditemukan
+                // Melakukan update jika ID ada
+                String SQLUbah = "UPDATE " + NamaTabel + " SET " + getFieldValueEdit(Field, Value) + " WHERE " + PrimaryKey + "='" + IsiPrimary + "'";
+                perintah.executeUpdate(SQLUbah);
+                JOptionPane.showMessageDialog(null, "Data Berhasil DiUpdate");
+            } else { // Jika ID tidak ditemukan
+                JOptionPane.showMessageDialog(null, "Data Tidak Ditemukan");
+            }
+
+            rs.close(); // Tutup ResultSet
+            perintah.close(); // Tutup Statement
+            getKoneksi().close(); // Tutup koneksi
+
+        } catch (Exception e) {
+            System.err.println(e.toString());
+        }
+    }     
+    public static void HapusDinamis(String NamaTabel, String PK, String isi) {
+        try {
+            // Mencari apakah ID yang diberikan ada di dalam tabel
+            String SQLCheck = "SELECT COUNT(*) FROM " + NamaTabel + " WHERE " + PK + " = '" + isi + "'";
+            Statement perintah = getKoneksi().createStatement();
+            ResultSet rs = perintah.executeQuery(SQLCheck);
+
+            if (rs.next() && rs.getInt(1) > 0) { // Jika ID ditemukan
+                // Menghapus data jika ID ditemukan
+                String SQLDelete = "DELETE FROM " + NamaTabel + " WHERE " + PK + "='" + isi + "'";
+                perintah.executeUpdate(SQLDelete);
+                JOptionPane.showMessageDialog(null, "Data Berhasil Dihapus");
+            } else { // Jika ID tidak ditemukan
+                JOptionPane.showMessageDialog(null, "Data Tidak Ditemukan");
+            }
+
+            rs.close(); // Tutup ResultSet
+            perintah.close(); // Tutup Statement
+            getKoneksi().close(); // Tutup koneksi
+
+        } catch (Exception e) {
+            System.out.println(e.toString());
+        }
+    }
 }

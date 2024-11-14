@@ -33,7 +33,7 @@ public class mainframe extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jButton1.setText("Jadwal");
+        jButton1.setText("kecamatan");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -47,7 +47,7 @@ public class mainframe extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setText("JADWAL CERAMAH");
+        jLabel1.setText("SISTEM INFORMASI PENJADWALAN CERAMAH");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -61,9 +61,9 @@ public class mainframe extends javax.swing.JFrame {
                         .addGap(89, 89, 89)
                         .addComponent(jButton2))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(131, 131, 131)
+                        .addGap(62, 62, 62)
                         .addComponent(jLabel1)))
-                .addContainerGap(97, Short.MAX_VALUE))
+                .addContainerGap(81, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -87,7 +87,7 @@ public class mainframe extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        new framejadwal().setVisible(true);
+        new framekecamatan().setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**

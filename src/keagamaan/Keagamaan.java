@@ -4,7 +4,6 @@
  */
 package keagamaan;
 import forms.mainframe;
-import config.configDB;
 
 /**
  *
@@ -18,12 +17,6 @@ public class Keagamaan {
     public static void main(String[] args) {
         // TODO code application logic here
         new mainframe().setVisible(true);
-        configDB obj = new configDB();
-        String field[]={"id_masjid","nama_masjid","alamat_masjid","id_kecamatan","foto"};
-        String isi[]={"1","baitullah","bjm","1","masjid.png"};
-        
-        System.out.println(obj.gettabelfield(field));
-        System.out.println(obj.getisitabel(isi));
     }
     
 }
