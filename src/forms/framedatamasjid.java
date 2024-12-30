@@ -3,36 +3,27 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package forms;
-import java.sql.Driver;
-import java.sql.DriverManager;
-import java.sql.Connection;
 import config.configDB;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author acer
  */
 public class framedatamasjid extends javax.swing.JFrame {
-    private String url ="jdbc:mysql://localhost:3306/2210010133_pbo2";
-    private String user ="root";
-    private String pass ="";
-    
-    private Connection KoneksiDatabase;
-    /**
-     * Creates new form frameDVD
-     */
+    private configDB myConfig;
+    String Sql = "select * from data_masjid";
+    String[] judulKolom = {"id_masjid", "nama_masjid", "alamat_masjid", "id_kecamatan", "foto"};
+    int[] lebarKolom = {120, 300, 150, 100, 100};
     public framedatamasjid() {
         initComponents();
         this.setLocationRelativeTo(null);
-        configDB configDB = new configDB();               
-        try {
-            Driver driverku = new com.mysql.jdbc.Driver();
-            DriverManager.registerDriver(driverku);
-            KoneksiDatabase = DriverManager.getConnection(url, user, pass);
-            System.out.println("Frame berhasil dikoneksikan ke database");
-        } catch (Exception e) {
-            System.err.print(e.toString());
-        }
+        myConfig = new configDB();
+        myConfig.settingJudulTabel(TabelMasjid, judulKolom);
+        myConfig.settingLebarKolom(TabelMasjid, lebarKolom);
+        myConfig.tampilTabel(TabelMasjid, Sql, judulKolom);   
     }
 
     /**
@@ -54,10 +45,15 @@ public class framedatamasjid extends javax.swing.JFrame {
         txtalamat = new javax.swing.JTextField();
         txtfoto = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
-        simpan = new javax.swing.JButton();
-        ubah = new javax.swing.JButton();
-        hapus = new javax.swing.JButton();
         txtidkecamatan = new javax.swing.JTextField();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        TabelMasjid = new javax.swing.JTable();
+        jButtonPrint = new javax.swing.JButton();
+        txtCari1 = new javax.swing.JTextField();
+        kembali = new javax.swing.JButton();
+        simpan1 = new javax.swing.JButton();
+        ubah1 = new javax.swing.JButton();
+        hapus1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -85,26 +81,64 @@ public class framedatamasjid extends javax.swing.JFrame {
 
         jLabel6.setText("DATA MASJID");
 
-        simpan.setText("SIMPAN");
-        simpan.addActionListener(new java.awt.event.ActionListener() {
+        TabelMasjid.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        TabelMasjid.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                TabelMasjidMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(TabelMasjid);
+
+        jButtonPrint.setText("CETAK");
+        jButtonPrint.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                simpanActionPerformed(evt);
+                jButtonPrintActionPerformed(evt);
             }
         });
 
-        ubah.setText("UBAH");
-        ubah.setName("ubah"); // NOI18N
-        ubah.addActionListener(new java.awt.event.ActionListener() {
+        txtCari1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ubahActionPerformed(evt);
+                txtCari1ActionPerformed(evt);
             }
         });
 
-        hapus.setText("HAPUS");
-        hapus.setName("hapus"); // NOI18N
-        hapus.addActionListener(new java.awt.event.ActionListener() {
+        kembali.setText("KEMBALI");
+        kembali.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                hapusActionPerformed(evt);
+                kembaliActionPerformed(evt);
+            }
+        });
+
+        simpan1.setText("SIMPAN");
+        simpan1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                simpan1ActionPerformed(evt);
+            }
+        });
+
+        ubah1.setText("UBAH");
+        ubah1.setName("ubah"); // NOI18N
+        ubah1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ubah1ActionPerformed(evt);
+            }
+        });
+
+        hapus1.setText("HAPUS");
+        hapus1.setName("hapus"); // NOI18N
+        hapus1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                hapus1ActionPerformed(evt);
             }
         });
 
@@ -117,60 +151,89 @@ public class framedatamasjid extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel6)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel5))
-                        .addGap(35, 35, 35)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtfoto, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(txtidmasjid, javax.swing.GroupLayout.DEFAULT_SIZE, 173, Short.MAX_VALUE)
-                                .addComponent(txtnamamasjid)
-                                .addComponent(txtalamat))
-                            .addComponent(txtidkecamatan)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel6)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel2)
+                                    .addComponent(jLabel3)
+                                    .addComponent(jLabel1)
+                                    .addComponent(jLabel4)
+                                    .addComponent(jLabel5))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(6, 6, 6)
+                                        .addComponent(txtfoto, javax.swing.GroupLayout.DEFAULT_SIZE, 241, Short.MAX_VALUE))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(txtidkecamatan))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(txtnamamasjid))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(txtalamat))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(txtidmasjid))))))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(simpan)
+                        .addComponent(kembali, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(simpan1, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(ubah1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(hapus1))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(txtCari1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(ubah)
-                        .addGap(18, 18, 18)
-                        .addComponent(hapus)))
-                .addContainerGap(121, Short.MAX_VALUE))
+                        .addComponent(jButtonPrint)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(32, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel6)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel1)
+                                .addGap(17, 17, 17)
+                                .addComponent(jLabel2)
+                                .addGap(18, 18, 18)
+                                .addComponent(jLabel3)
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel4)
+                                    .addComponent(txtidkecamatan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(6, 6, 6)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel5)
+                                    .addComponent(txtfoto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(txtidmasjid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(11, 11, 11)
+                                .addComponent(txtnamamasjid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(txtalamat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel1)
-                            .addComponent(txtidmasjid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(11, 11, 11)
+                            .addComponent(txtCari1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButtonPrint))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel2)
-                            .addComponent(txtnamamasjid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel3)
-                            .addComponent(txtalamat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel4))
-                    .addComponent(txtidkecamatan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel5)
-                    .addComponent(txtfoto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(simpan)
-                    .addComponent(ubah)
-                    .addComponent(hapus))
-                .addGap(54, 54, 54))
+                            .addComponent(simpan1)
+                            .addComponent(ubah1)
+                            .addComponent(hapus1)
+                            .addComponent(kembali))))
+                .addContainerGap())
         );
 
         pack();
@@ -184,30 +247,93 @@ public class framedatamasjid extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtalamatActionPerformed
 
-    private void simpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_simpanActionPerformed
-         try {
-            String id_masjid = txtidmasjid.getText();
-            String nama_masjid = txtnamamasjid.getText();
-            String alamat = txtalamat.getText();
-            String id_kecamatan = txtidkecamatan.getText();
-            String foto = txtfoto.getText();
-            new configDB(). Simpanmasjid(id_masjid, nama_masjid, alamat,id_kecamatan, foto);
+    private void TabelMasjidMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TabelMasjidMouseClicked
+        int baris=TabelMasjid.getSelectedRow();
+        txtidmasjid.setText(TabelMasjid.getValueAt(baris, 0).toString());
+        txtnamamasjid.setText(TabelMasjid.getValueAt(baris, 1).toString());
+        txtalamat.setText(TabelMasjid.getValueAt(baris, 2).toString());
+        txtidkecamatan.setText(TabelMasjid.getValueAt(baris, 3).toString());
+        txtfoto.setText(TabelMasjid.getValueAt(baris, 4).toString());
+    }//GEN-LAST:event_TabelMasjidMouseClicked
+
+    private void jButtonPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPrintActionPerformed
+        try {
+            if (txtCari1.getText().isEmpty()){
+                myConfig.tampilLaporan("src/forms/reportMasjid.jrxml","SELECT*FROM data_masjid");
+            }else {
+                String sql="SELECT*FROM data_masjid where id_masjid='"+txtCari1.getText()+"'"+
+                    " or nama_masjid='"+txtCari1.getText()+"'"+
+                    " or alamat_masjid='"+txtCari1.getText()+"'"+
+                    " or id_kecamatan='"+txtCari1.getText()+"'"+
+                    " or foto='"+txtCari1.getText()+"'"
+                ;
+                myConfig.tampilLaporan("src/forms/reportMasjid.jrxml",sql);
+            }
+
+        } catch (Exception ex){
+            Logger.getLogger(framekecamatan.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jButtonPrintActionPerformed
+
+    private void txtCari1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCari1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtCari1ActionPerformed
+
+    private void kembaliActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_kembaliActionPerformed
+        new mainframe().setVisible(true);
+        dispose();
+    }//GEN-LAST:event_kembaliActionPerformed
+
+    private void simpan1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_simpan1ActionPerformed
+        try {
+            // Menyiapkan data untuk disimpan
+            String[] field = {"id_masjid","nama_masjid","alamat_masjid","id_kecamatan","foto"};
+            String[] data = {
+                txtidmasjid.getText(),
+                txtnamamasjid.getText(),
+                txtalamat.getText(),
+                txtidkecamatan.getText(),
+                txtalamat.getText(),
+            };
+
+            configDB configDB = new configDB();
+            if (configDB.DuplicateKey("data_masjid", "id_masjid", data[0])) {
+                JOptionPane.showMessageDialog(this, "ID masjid sudah ada!");
+                return;
+            }
+
+            // Memanggil method TambahDinamis menggunakan objek configDB
+            configDB.SimpanDinamis("data_masjid", field, data);
+            bersihForm();
+            loaddata();
+
         } catch (Exception e) {
             System.err.println(e.toString());
         }
-    }//GEN-LAST:event_simpanActionPerformed
+    }//GEN-LAST:event_simpan1ActionPerformed
 
-    private void ubahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ubahActionPerformed
-        String[] field = {"data_masjid"};
-        String[] data = {txtnamamasjid.getText()};
+    private void ubah1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ubah1ActionPerformed
+        String[] field = {"id_masjid","nama_masjid","alamat_masjid","id_kecamatan","foto"};
+        String[] data = {
+           txtidmasjid.getText(),
+           txtnamamasjid.getText(),
+           txtalamat.getText(),
+           txtidkecamatan.getText(),
+           txtalamat.getText(),
+        };
 
         configDB.UbahDinamis("data_masjid", "id_masjid", txtidmasjid.getText(), field, data);
-    }//GEN-LAST:event_ubahActionPerformed
+        bersihForm();
+        loaddata();
+    }//GEN-LAST:event_ubah1ActionPerformed
 
-    private void hapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hapusActionPerformed
+    private void hapus1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hapus1ActionPerformed
         configDB.HapusDinamis("data_masjid", "id_masjid", txtidmasjid.getText());
-    }//GEN-LAST:event_hapusActionPerformed
+        bersihForm();
+        loaddata();
+    }//GEN-LAST:event_hapus1ActionPerformed
 
+    
     /**
      * @param args the command line arguments
      */
@@ -244,19 +370,38 @@ public class framedatamasjid extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton hapus;
+    private javax.swing.JTable TabelMasjid;
+    private javax.swing.JButton hapus1;
+    private javax.swing.JButton jButtonPrint;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JButton simpan;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JButton kembali;
+    private javax.swing.JButton simpan1;
+    private javax.swing.JTextField txtCari1;
     private javax.swing.JTextField txtalamat;
     private javax.swing.JTextField txtfoto;
     private javax.swing.JTextField txtidkecamatan;
     private javax.swing.JTextField txtidmasjid;
     private javax.swing.JTextField txtnamamasjid;
-    private javax.swing.JButton ubah;
+    private javax.swing.JButton ubah1;
     // End of variables declaration//GEN-END:variables
+    private void bersihForm() {
+        txtalamat.setText("");
+        txtfoto.setText("");
+        txtidkecamatan.setText("");
+        txtidmasjid.setText("");
+        txtnamamasjid.setText("");
+    }
+    void loaddata(){
+        myConfig.settingLebarKolom(TabelMasjid, lebarKolom);
+        myConfig.settingJudulTabel(TabelMasjid, judulKolom);
+        myConfig.tampilTabel(TabelMasjid, Sql, judulKolom);
+    }
+
 }
+

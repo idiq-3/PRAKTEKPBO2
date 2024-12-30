@@ -3,37 +3,34 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package forms;
-import java.sql.Driver;
-import java.sql.DriverManager;
-import java.sql.Connection;
 import config.configDB;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author acer
  */
 public class framekecamatan extends javax.swing.JFrame {
-    private String url ="jdbc:mysql://localhost:3306/2210010133_pbo2";
-    private String user ="root";
-    private String pass ="";
-    
-    private Connection KoneksiDatabase;
-    /**
-     * Creates new form framekecamatan
-     */
+    private configDB myConfig;
+    String Sql = "select * from kecamatan";
+    String[] judulKolom = {"id_kecamatan", "kecamatan"};
+    int[] lebarKolom = {120, 300, 150, 100, 100};
     public framekecamatan() {
         initComponents();
         this.setLocationRelativeTo(null);
-        configDB configDB = new configDB();
+        myConfig = new configDB();
+        myConfig.settingJudulTabel(TabelKecamatan, judulKolom);
+        myConfig.settingLebarKolom(TabelKecamatan, lebarKolom);
+        myConfig.tampilTabel(TabelKecamatan, Sql, judulKolom);
+    
+    
+    /**
+     * Creates new form frameDVD
+     */
+    
         
-        
-        try {
-            Driver driverku = new com.mysql.jdbc.Driver();
-            DriverManager.registerDriver(driverku);
-            KoneksiDatabase = DriverManager.getConnection(url, user, pass);
-            System.out.println("Frame berhasil dikoneksikan ke database");
-        } catch (Exception e) {
-            System.err.print(e.toString());
-        }
     }
 
     /**
@@ -50,9 +47,14 @@ public class framekecamatan extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         txtidkecamatan = new javax.swing.JTextField();
         txtkecamatan = new javax.swing.JTextField();
-        ubah = new javax.swing.JButton();
-        hapus = new javax.swing.JButton();
-        simpan = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        TabelKecamatan = new javax.swing.JTable();
+        txtCari1 = new javax.swing.JTextField();
+        kembali = new javax.swing.JButton();
+        simpan1 = new javax.swing.JButton();
+        ubah1 = new javax.swing.JButton();
+        hapus1 = new javax.swing.JButton();
+        jButtonPrint = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -62,26 +64,64 @@ public class framekecamatan extends javax.swing.JFrame {
 
         jLabel3.setText("kecamatan");
 
-        ubah.setText("UBAH");
-        ubah.setName("ubah"); // NOI18N
-        ubah.addActionListener(new java.awt.event.ActionListener() {
+        TabelKecamatan.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        TabelKecamatan.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                TabelKecamatanMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(TabelKecamatan);
+
+        txtCari1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ubahActionPerformed(evt);
+                txtCari1ActionPerformed(evt);
             }
         });
 
-        hapus.setText("HAPUS");
-        hapus.setName("hapus"); // NOI18N
-        hapus.addActionListener(new java.awt.event.ActionListener() {
+        kembali.setText("KEMBALI");
+        kembali.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                hapusActionPerformed(evt);
+                kembaliActionPerformed(evt);
             }
         });
 
-        simpan.setText("SIMPAN");
-        simpan.addActionListener(new java.awt.event.ActionListener() {
+        simpan1.setText("SIMPAN");
+        simpan1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                simpanActionPerformed(evt);
+                simpan1ActionPerformed(evt);
+            }
+        });
+
+        ubah1.setText("UBAH");
+        ubah1.setName("ubah"); // NOI18N
+        ubah1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ubah1ActionPerformed(evt);
+            }
+        });
+
+        hapus1.setText("HAPUS");
+        hapus1.setName("hapus"); // NOI18N
+        hapus1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                hapus1ActionPerformed(evt);
+            }
+        });
+
+        jButtonPrint.setText("CETAK");
+        jButtonPrint.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonPrintActionPerformed(evt);
             }
         });
 
@@ -90,25 +130,41 @@ public class framekecamatan extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(14, 14, 14)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(14, 14, 14)
+                        .addComponent(jLabel1))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel3))
-                        .addGap(47, 47, 47)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtkecamatan, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtidkecamatan, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(9, 9, 9)
-                        .addComponent(simpan)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(ubah)
-                        .addGap(18, 18, 18)
-                        .addComponent(hapus)))
-                .addContainerGap(98, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(14, 14, 14)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel2)
+                                    .addComponent(jLabel3))
+                                .addGap(47, 47, 47)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txtkecamatan, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtidkecamatan, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(38, 38, 38))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                        .addComponent(kembali, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(simpan1, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(ubah1)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(hapus1))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(txtCari1)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jButtonPrint)
+                                        .addGap(6, 6, 6)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 429, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -116,51 +172,121 @@ public class framekecamatan extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel1)
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(txtidkecamatan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(txtkecamatan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(simpan)
-                    .addComponent(ubah)
-                    .addComponent(hapus))
-                .addContainerGap(157, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel2)
+                            .addComponent(txtidkecamatan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel3)
+                            .addComponent(txtkecamatan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtCari1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButtonPrint))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(simpan1)
+                            .addComponent(ubah1)
+                            .addComponent(hapus1)
+                            .addComponent(kembali)))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(234, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void simpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_simpanActionPerformed
-        // TODO add your handling code here:
-        try {
-            String id_kecamatan = txtidkecamatan.getText();
-            String kecamatan = txtkecamatan.getText();
-            new configDB(). SimpanKecamatan(id_kecamatan, kecamatan);
-        } catch (Exception e) {
-            System.err.println(e.toString());
-        }
-    }//GEN-LAST:event_simpanActionPerformed
+    private void txtCari1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCari1ActionPerformed
+       
+    }//GEN-LAST:event_txtCari1ActionPerformed
 
-    private void ubahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ubahActionPerformed
-        // TODO add your handling code here:
-        configDB configDB = new configDB();    
-        // Memanggil method UbahDinamis menggunakan objek
-        String[] field = {"kecamatan"};
-        String[] data = {txtkecamatan.getText()};
+    private void kembaliActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_kembaliActionPerformed
+        new mainframe().setVisible(true);
+        dispose();
+    }//GEN-LAST:event_kembaliActionPerformed
+
+    private void simpan1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_simpan1ActionPerformed
+        try {
+    // Menyiapkan data untuk disimpan
+        String[] field = {"id_kecamatan","kecamatan"};
+        String[] data = {
+            txtidkecamatan.getText(),
+            txtkecamatan.getText(),
+           
+        };
+
+        configDB configDB = new configDB();
+        if (configDB.DuplicateKey("kecamatan", "id_kecamatan", data[0])) {
+                JOptionPane.showMessageDialog(this, "ID Kecamatan sudah ada!");
+                return;
+            }
+
+        // Memanggil method TambahDinamis menggunakan objek configDB
+        configDB.SimpanDinamis("kecamatan", field, data);
+        bersihForm();
+        loaddata();
+
+    } catch (Exception e) {
+        System.err.println(e.toString());
+    }
+    }//GEN-LAST:event_simpan1ActionPerformed
+
+    private void ubah1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ubah1ActionPerformed
+        String[] field = {"id_kecamatan", "kecamatan"};
+        String[] data = {
+            txtidkecamatan.getText(),
+            txtkecamatan.getText()
+        };
 
         configDB.UbahDinamis("kecamatan", "id_kecamatan", txtidkecamatan.getText(), field, data);
+        bersihForm();
+        loaddata();
+    }//GEN-LAST:event_ubah1ActionPerformed
 
-    }//GEN-LAST:event_ubahActionPerformed
-
-    private void hapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hapusActionPerformed
-        // TODO add your handling code here:
+    private void hapus1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hapus1ActionPerformed
         configDB.HapusDinamis("kecamatan", "id_kecamatan", txtidkecamatan.getText());
-    }//GEN-LAST:event_hapusActionPerformed
+        bersihForm();
+        loaddata();
+    }//GEN-LAST:event_hapus1ActionPerformed
 
+    private void TabelKecamatanMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TabelKecamatanMouseClicked
+        int baris=TabelKecamatan.getSelectedRow();
+        txtidkecamatan.setText(TabelKecamatan.getValueAt(baris, 0).toString());
+        txtkecamatan.setText(TabelKecamatan.getValueAt(baris, 1).toString());
+    }//GEN-LAST:event_TabelKecamatanMouseClicked
+
+    private void jButtonPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPrintActionPerformed
+         try {
+            if (txtCari1.getText().isEmpty()){
+                myConfig.tampilLaporan("src/forms/reportKecamatan.jrxml","SELECT*FROM kecamatan");   
+            }else {
+                String sql="SELECT*FROM kecamatan where id_kecamatan='"+txtCari1.getText()+"'"+
+                        " or kecamatan='"+txtCari1.getText()+"'";
+                myConfig.tampilLaporan("src/forms/reportKecamatan.jrxml",sql);
+            }
+            
+        } catch (Exception ex){
+            Logger.getLogger(framekecamatan.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+    }//GEN-LAST:event_jButtonPrintActionPerformed
+    private void cariData(String cari){
+        String sqlCari="";
+        try {
+            if (cari.isEmpty()){
+                sqlCari="SELECT*FROM kecamatan";
+            }else {
+                sqlCari="SELECT*FROM dvd where id_kecamatan='"+cari+"'"+
+                        " or kecamatan='"+cari+"'";
+            }
+            myConfig.settingJudulTabel(TabelKecamatan, judulKolom);
+            myConfig.tampilTabel(TabelKecamatan, sqlCari, judulKolom);
+            myConfig.settingLebarKolom(TabelKecamatan, lebarKolom);
+        }catch (Exception e){
+            JOptionPane.showMessageDialog(null, e.toString());
+        }
+    }
     /**
      * @param args the command line arguments
      */
@@ -198,13 +324,27 @@ public class framekecamatan extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton hapus;
+    private javax.swing.JTable TabelKecamatan;
+    private javax.swing.JButton hapus1;
+    private javax.swing.JButton jButtonPrint;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JButton simpan;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JButton kembali;
+    private javax.swing.JButton simpan1;
+    private javax.swing.JTextField txtCari1;
     private javax.swing.JTextField txtidkecamatan;
     private javax.swing.JTextField txtkecamatan;
-    private javax.swing.JButton ubah;
+    private javax.swing.JButton ubah1;
     // End of variables declaration//GEN-END:variables
+    private void bersihForm() {
+        txtidkecamatan.setText("");
+        txtkecamatan.setText("");      
+    }
+    void loaddata(){
+        myConfig.settingLebarKolom(TabelKecamatan, lebarKolom);
+        myConfig.settingJudulTabel(TabelKecamatan, judulKolom);
+        myConfig.tampilTabel(TabelKecamatan, Sql, judulKolom);
+    }
 }
